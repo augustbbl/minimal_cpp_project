@@ -27,7 +27,7 @@ test: $(OBJECTS) $(TEST_OBJECTS) $(TEST_DIR)/init.test.o
 	$(CC) -c $(CFLAGS) $< -o $@
 
 clean:
-	rm -f *.o $(TARGET) $(TEST_TARGET)
+	rm -f *.o $(TEST_DIR)/*.o $(TARGET) $(TEST_TARGET)
 
 tar: clean
 	tar -cvzf *
