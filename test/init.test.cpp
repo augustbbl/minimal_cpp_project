@@ -2,13 +2,8 @@
 ** @file init.cpp
 ** @author August Lounibos
 ** @date 
-** @brief driver test file
+** @brief driver test file, using catch2 testing framework
 *******************************************************************************/
 
-
-
-int main(int argc, char * argv[]) {
-    
-
-    return 0;
-}
+#define CATCH_CONFIG_MAIN
+#include "catch.hpp"

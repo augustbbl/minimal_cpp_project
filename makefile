@@ -1,11 +1,14 @@
 ##########################################################################################
 
 TARGET := 
-TEST_TARGET := test_$(TARGET)
 OBJECTS := 
 
+TEST_DIR := test
+TEST_TARGET := $(TEST_DIR)/test_$(TARGET)
+TEST_OBJECTS := $(OBJECTS:%.o=$(TEST_DIR)/%.test.o)
+
 CC := gcc
-CFLAGS := -Wall -Wextra -Werror
+CFLAGS := -Wall -Wextra -Wpedantic -Werror -g -fsanitize=address 
 CXX := g++
 CXXFLAGS := --std=c++1y
 
@@ -14,10 +17,7 @@ CXXFLAGS := --std=c++1y
 default: $(OBJECTS) init.o
 	$(CXX) $(CFLAGS) $(CXXFLAGS) $^ -o $(TARGET)
 
-debug: $(OBJECTS) init.o
-	$(CXX) $(CFLAGS) $(CXXFLAGS) -g -fsanitize=address $^ -o $(TARGET)
-
-test: $(OBJECTS) test.o
+test: $(OBJECTS) $(TEST_OBJECTS) $(TEST_DIR)/init.test.o
 	$(CXX) $(CFLAGS) $(CXXFLAGS) $^ -o $(TEST_TARGET)
 
 %.o: %.cpp
