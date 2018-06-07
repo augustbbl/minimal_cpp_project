@@ -1,29 +1,32 @@
 ##########################################################################################
 
-TARGET := 
+TARGET := asdf
 OBJECTS := 
 
 TEST_DIR := test
-TEST_TARGET := $(TEST_DIR)/test_$(TARGET)
-TEST_OBJECTS := $(OBJECTS:%.o=$(TEST_DIR)/%.test.o)
+TEST_TARGET := test_$(TARGET)
+TEST_OBJECTS := $(OBJECTS:%.o=$(TEST_DIR)/%.test.o) test/unique_ptr.test.o
+
+INCLUDE_DIR := include
 
 CC := gcc
-CFLAGS := -Wall -Wextra -Wpedantic -Werror -g -fsanitize=address 
 CXX := g++
-CXXFLAGS := --std=c++1y
+CFLAGS := -Wall -Wextra -Wpedantic -Werror -g -fsanitize=address -fsanitize=leak -fsanitize=undefined 
+CXXFLAGS := -std=c++1y $(CFLAGS) -I $(INCLUDE_DIR)
 
 ##########################################################################################
 
 default: $(OBJECTS) init.o
-	$(CXX) $(CFLAGS) $(CXXFLAGS) $^ -o $(TARGET)
+	$(CXX) $(CXXFLAGS) $^ -o $(TARGET)
 
 test: $(OBJECTS) $(TEST_OBJECTS) $(TEST_DIR)/init.test.o
-	$(CXX) $(CFLAGS) $(CXXFLAGS) $^ -o $(TEST_TARGET)
+	$(CXX) $(CXXFLAGS) $^ -o $(TEST_TARGET)
+	./$(TEST_TARGET)
 
-%.o: %.cpp
-	$(CXX) -c $(CFLAGS) $(CXXFLAGS) $< -o $@
+%.o: %.cpp %.hpp
+	$(CXX) -c $(CXXFLAGS) $< -o $@
 
-%.o: %.c
+%.o: %.c %.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
 clean:
